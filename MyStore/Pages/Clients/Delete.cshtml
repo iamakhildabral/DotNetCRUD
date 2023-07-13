@@ -1,0 +1,30 @@
+﻿@page
+@using System.Data.SqlClient;
+
+@{
+    try
+    {
+        String id = Request.Query["id"];
+        string connectionString = "Data Source=.\\sqlexpress;Initial Catalog=mystore;Integrated Security=True";
+        using(SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            String sql = "DELETE FROM clients where id=@id";
+            using(SqlCommand command = new SqlCommand(sql, connection))
+            {
+                //we are writing this to replace the value of @id with the in scope global id value
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+
+        throw ex;
+    }
+
+    Response.Redirect("/Clients/Index");
+}
